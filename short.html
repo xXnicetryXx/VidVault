@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>VidVault Short</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#07090d;--sf:#0d1117;--s2:#131a24;--s3:#1a2333;--b:#1e2d42;--b2:#28394f;--red:#ff3c3c;--or:#ff8c42;--tl:#3cf0c5;--pu:#a855f7;--go:#f59e0b;--tx:#dde5f0;--mu:#566882;--mu2:#7a90ad;--D:'Bebas Neue',sans-serif;--B:'DM Sans',sans-serif;--M:'JetBrains Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{background:var(--bg);color:var(--tx);font-family:var(--B);display:flex;flex-direction:column}
+.wrap{flex:1;display:flex;overflow:hidden;min-height:0}
+.vs{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#000;position:relative;min-width:0}
+.sv{height:100%;width:auto;max-width:100%;display:block;object-fit:contain;cursor:pointer}
+body.em .sv{width:100%;height:100%}
+.vov{position:absolute;inset:0;display:flex;align-items:flex-end;padding:14px;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,transparent 40%);pointer-events:none}
+.vi{flex:1;min-width:0;pointer-events:all}
+.vtit{font-family:var(--D);font-size:1.35rem;letter-spacing:2px;text-shadow:0 2px 8px rgba(0,0,0,.8);margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vdsc{font-size:.76rem;color:rgba(255,255,255,.68);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vmta{font-size:.7rem;color:rgba(255,255,255,.48);margin-top:4px}
+.sbd{display:inline-flex;align-items:center;gap:4px;background:rgba(168,85,247,.28);color:#d8b4fe;border:1px solid rgba(168,85,247,.4);font-size:.62rem;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px}
+.pvbd{display:none;align-items:center;gap:4px;background:rgba(245,158,11,.24);color:#fde68a;border:1px solid rgba(245,158,11,.4);font-size:.62rem;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px;margin-left:5px}
+.pvbd.show{display:inline-flex}
+/* creator row */
+.cr-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;cursor:pointer}
+.cr-av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.6rem;flex-shrink:0}
+.cr-nm{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.8)}
+/* side actions */
+.sac{display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px 9px;pointer-events:all;position:absolute;right:0;bottom:14px}
+.sa{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.sai{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:1.15rem;border:1px solid rgba(255,255,255,.14);transition:all .2s}
+.sa:hover .sai{background:rgba(255,255,255,.2);transform:scale(1.1)}
+.sa.liked .sai{background:rgba(255,60,60,.3);border-color:rgba(255,60,60,.5)}
+.sal{font-size:.62rem;color:rgba(255,255,255,.55);font-weight:600}
+.tz{position:absolute;inset:0;cursor:pointer;z-index:1}
+.ppi{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;font-size:1.4rem;transition:transform .15s;pointer-events:none}
+.ppi.pop{transform:translate(-50%,-50%) scale(1)}
+/* comments */
+.cs{width:330px;min-width:260px;max-width:360px;display:flex;flex-direction:column;background:var(--sf);border-left:1px solid var(--b);overflow:hidden}
+body.em .cs{display:none}
+.ch{padding:12px 14px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ch h3{font-family:var(--D);font-size:1.1rem;letter-spacing:2px;flex:1}
+.cl{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.cmt{background:var(--s2);border:1px solid var(--b);border-radius:9px;padding:9px 10px}
+.cmt-h{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.cav{width:25px;height:25px;border-radius:50%;background:linear-gradient(135deg,var(--pu),var(--tl));display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff;flex-shrink:0}
+.cnm{font-weight:600;font-size:.79rem}
+.ctm{font-size:.67rem;color:var(--mu);margin-left:auto}
+.ctx{font-size:.79rem;color:var(--mu2);line-height:1.5}
+.clk{background:none;border:none;cursor:pointer;font-size:.69rem;color:var(--mu);font-family:var(--B);transition:color .2s;padding:0;margin-top:4px;display:flex;align-items:center;gap:3px}
+.clk:hover,.clk.liked{color:var(--red)}
+.nc{text-align:center;padding:26px 12px;color:var(--mu);font-size:.82rem}
+.nc .ico{font-size:2.2rem;margin-bottom:8px}
+.ci{padding:10px 12px;border-top:1px solid var(--b);flex-shrink:0;background:var(--s2)}
+.ni{display:flex;gap:6px;margin-bottom:6px}
+.cni{flex:1;background:var(--s3);color:var(--tx);border:1px solid var(--b);border-radius:7px;padding:7px 10px;font-family:var(--B);font-size:.8rem;outline:none;transition:border-color .2s}
+.cni:focus{border-color:var(--pu)}
+.cta{width:100%;background:var(--s3);color:var(--tx);border:1px solid var(--b);border-radius:7px;padding:8px 10px;font-family:var(--B);font-size:.8rem;outline:none;resize:none;transition:border-color .2s;margin-bottom:6px}
+.cta:focus{border-color:var(--pu)}
+.cni::placeholder,.cta::placeholder{color:var(--mu)}
+.csub{width:100%;background:var(--pu);color:#fff;border:none;border-radius:7px;padding:8px;font-family:var(--B);font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s}
+.csub:hover{background:#9333ea}
+/* topbar */
+.tb{height:50px;background:rgba(7,9,13,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--b);display:flex;align-items:center;padding:0 14px;gap:10px;flex-shrink:0;z-index:10}
+body.em .tb{display:none}
+.bk{font-size:.8rem;color:var(--mu2);text-decoration:none;display:flex;align-items:center;gap:5px;transition:color .2s}
+.bk:hover{color:var(--tx)}
+.logo2{font-family:var(--D);font-size:1.3rem;letter-spacing:2px;background:linear-gradient(135deg,var(--red),var(--or));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo2 span{-webkit-text-fill-color:var(--tl)}
+.tsp{flex:1}
+.tbtn{padding:6px 12px;border-radius:7px;border:none;cursor:pointer;font-family:var(--B);font-size:.76rem;font-weight:600;transition:all .2s}
+.tbtn-tl{background:rgba(60,240,197,.1);color:var(--tl);border:1px solid rgba(60,240,197,.2)}.tbtn-tl:hover{background:rgba(60,240,197,.18)}
+.tbtn-da{background:rgba(255,60,60,.1);color:var(--red);border:1px solid rgba(255,60,60,.2)}.tbtn-da:hover{background:rgba(255,60,60,.18)}
+.tbtn-go{background:rgba(245,158,11,.1);color:var(--go);border:1px solid rgba(245,158,11,.2)}.tbtn-go:hover{background:rgba(245,158,11,.18)}
+/* save bar */
+.svb{display:none;align-items:center;gap:8px;padding:6px 10px;background:rgba(60,240,197,.07);border-bottom:1px solid rgba(60,240,197,.2);font-size:.71rem;color:var(--tl);flex-shrink:0}
+.svb.show{display:flex}
+.svbt{flex:1;height:3px;background:var(--s3);border-radius:99px;overflow:hidden}
+.svbf{height:100%;width:0%;background:var(--tl);border-radius:99px;transition:width .3s}
+/* embed popup */
+.emp{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:18px;opacity:0;pointer-events:none;transition:opacity .3s}
+.emp.open{opacity:1;pointer-events:all}
+.emb{background:var(--sf);border:1px solid var(--b2);border-radius:13px;padding:22px;width:100%;max-width:490px}
+.embt{font-family:var(--D);font-size:1.4rem;letter-spacing:2px;margin-bottom:13px}
+.embl{font-size:.69rem;color:var(--mu2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+.embta{width:100%;background:var(--s2);color:var(--or);border:1px solid var(--b);border-radius:7px;padding:10px;font-family:var(--M);font-size:.69rem;resize:none;outline:none;line-height:1.6}
+.embn{font-size:.68rem;color:var(--mu);margin-top:6px;line-height:1.5}
+.emba{display:flex;gap:7px;margin-top:12px;justify-content:flex-end}
+/* delete confirm */
+.dcm{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.9);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+.dcm.open{opacity:1;pointer-events:all}
+.dcb{background:var(--sf);border:1px solid rgba(255,60,60,.3);border-radius:13px;padding:26px;width:100%;max-width:360px;text-align:center;transform:scale(.95);transition:transform .3s}
+.dcm.open .dcb{transform:scale(1)}
+.dci{font-size:2.6rem;margin-bottom:11px}
+.dct{font-family:var(--D);font-size:1.45rem;letter-spacing:2px;margin-bottom:6px;color:var(--red)}
+.dcd{color:var(--mu2);font-size:.81rem;line-height:1.5;margin-bottom:17px}
+.dca{display:flex;gap:8px;justify-content:center}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;border-radius:7px;border:none;cursor:pointer;font-family:var(--B);font-size:.82rem;font-weight:600;transition:all .2s}
+.b-gh{background:var(--s2);color:var(--tx);border:1px solid var(--b)}.b-gh:hover{background:var(--s3)}
+.b-da{background:rgba(255,60,60,.1);color:var(--red);border:1px solid rgba(255,60,60,.2)}.b-da:hover{background:rgba(255,60,60,.2)}
+/* loader */
+.ls{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:13px}
+.lsp{width:36px;height:36px;border:3px solid var(--b);border-top-color:var(--pu);border-radius:50%;animation:spin .7s linear infinite}
+.lt{color:var(--mu2);font-size:.82rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+@media(max-width:700px){.cs{display:none}body:not(.em).sc .cs{display:flex;position:fixed;inset:0;z-index:100;width:100%;max-width:100%;border-left:none}}
+</style>
+</head>
+<body>
+<div class="ls" id="ls"><div class="lsp"></div><div class="lt">Loading Short…</div></div>
+
+<div class="tb" id="tb">
+  <a class="bk" href="index.html">← Back</a>
+  <div class="logo2">VID<span>VAULT</span></div>
+  <div class="tsp"></div>
+  <button class="tbtn tbtn-go" id="visBtn" onclick="togVis()" style="display:none"></button>
+  <button class="tbtn tbtn-tl" onclick="showEmb()">⌗ Embed</button>
+  <button class="tbtn tbtn-da" id="delBtn" onclick="cnfDel()" style="display:none">🗑 Delete</button>
+</div>
+
+<div class="svb" id="svb"><span>💾 Saving…</span><div class="svbt"><div class="svbf" id="svbf"></div></div><span id="svbp" style="font-family:var(--M);font-size:.7rem">0%</span></div>
+
+<div class="wrap">
+  <div class="vs">
+    <video class="sv" id="sv" loop playsinline></video>
+    <div class="tz" onclick="togPlay()"></div>
+    <div class="ppi" id="ppi"></div>
+    <div class="vov">
+      <div class="vi">
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-bottom:5px">
+          <div class="sbd">⚡ SHORT</div>
+          <div class="pvbd" id="pvBadge">🔒 PRIVATE</div>
+        </div>
+        <div class="cr-row" id="crRow" onclick="openCreator()">
+          <div class="cr-av" id="crAv"></div>
+          <div class="cr-nm" id="crNm"></div>
+        </div>
+        <div class="vtit" id="vtit"></div>
+        <div class="vdsc" id="vdsc"></div>
+        <div class="vmta" id="vmta"></div>
+      </div>
+      <div class="sac">
+        <div class="sa" id="lkAct" onclick="likeShort()"><div class="sai">❤️</div><div class="sal" id="lkCnt">0</div></div>
+        <div class="sa" onclick="togCmt()"><div class="sai">💬</div><div class="sal" id="cmtCnt">0</div></div>
+        <div class="sa" onclick="dlShort()"><div class="sai">⬇️</div><div class="sal">Save</div></div>
+        <div class="sa" onclick="showEmb()"><div class="sai">🔗</div><div class="sal">Embed</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="cs" id="cs">
+    <div class="ch"><h3>COMMENTS</h3><span id="cmtHdr" style="color:var(--mu2);font-size:.79rem"></span><button class="btn b-gh" onclick="hideCmt()" style="width:30px;height:30px;padding:0;border-radius:50%;font-size:.85rem">✕</button></div>
+    <div class="cl" id="cl"></div>
+    <div class="ci">
+      <div class="ni"><input class="cni" id="cnm" placeholder="Your name (optional)" maxlength="40"/></div>
+      <textarea class="cta" id="ctxt" rows="2" placeholder="Add a comment…" maxlength="500"></textarea>
+      <button class="csub" onclick="postCmt()">Post Comment</button>
+    </div>
+  </div>
+</div>
+
+<!-- EMBED POPUP -->
+<div class="emp" id="emp" onclick="if(event.target===this)this.classList.remove('open')">
+<div class="emb">
+  <div class="embt">EMBED THIS SHORT</div>
+  <div class="embl">Paste iframe into any HTML page</div>
+  <textarea class="embta" id="embta" rows="4" readonly onclick="this.select()"></textarea>
+  <div class="embn">⚠ Uses this browser's local storage. Works on same device/browser only.</div>
+  <div class="emba">
+    <button onclick="document.getElementById('emp').classList.remove('open')" style="background:var(--s2);color:var(--tx);border:1px solid var(--b);padding:8px 14px;border-radius:7px;cursor:pointer;font-family:var(--B);font-size:.82rem;font-weight:600">Close</button>
+    <button onclick="cpEmb()" style="background:var(--pu);color:#fff;border:none;padding:8px 14px;border-radius:7px;cursor:pointer;font-family:var(--B);font-size:.82rem;font-weight:600">Copy Code</button>
+  </div>
+</div>
+</div>
+
+<!-- DELETE CONFIRM -->
+<div class="dcm" id="dcm">
+<div class="dcb">
+  <div class="dci">🗑️</div>
+  <div class="dct">DELETE SHORT?</div>
+  <div class="dcd">Permanently delete <strong id="delNm"></strong>. Cannot be undone.</div>
+  <div class="dca">
+    <button class="btn b-gh" onclick="closeDel()">Cancel</button>
+    <button class="btn b-da" onclick="execDel()">Delete Forever</button>
+  </div>
+</div>
+</div>
+
+<script>
+// IDB
+let db;
+async function openDB(){return new Promise((r,j)=>{
+  const req=indexedDB.open('VidVault',6);
+  req.onupgradeneeded=e=>{const d=e.target.result;['users','videos','follows','videoLikes','comments','notifications'].forEach(n=>{if(!d.objectStoreNames.contains(n)){const s=d.createObjectStore(n,{keyPath:'id'});if(n==='users')s.createIndex('username','username',{unique:true});if(n==='follows'){s.createIndex('ferId','followerId',{unique:false});s.createIndex('fgId','followingId',{unique:false});}if(n==='videoLikes'){s.createIndex('uId','userId',{unique:false});s.createIndex('vId','videoId',{unique:false});}if(n==='comments')s.createIndex('vId','videoId',{unique:false});if(n==='notifications')s.createIndex('toId','toUserId',{unique:false});}});};
+  req.onsuccess=e=>{db=e.target.result;r()};req.onerror=e=>j(e.target.error);
+});}
+const iS=(st,m='readonly')=>db.transaction(st,m).objectStore(st);
+const iGet=(st,k)=>new Promise((r,j)=>{const q=iS(st).get(k);q.onsuccess=()=>r(q.result);q.onerror=j});
+const iAllIdx=(st,idx,v)=>new Promise((r,j)=>{const q=iS(st).index(idx).getAll(v);q.onsuccess=()=>r(q.result);q.onerror=j});
+const iPut=(st,v)=>new Promise((r,j)=>{const q=iS(st,'readwrite').put(v);q.onsuccess=r;q.onerror=j});
+const iDel2=(st,k)=>new Promise((r,j)=>{const q=iS(st,'readwrite').delete(k);q.onsuccess=r;q.onerror=j});
+
+// OPFS worker (read + delete only for short.html)
+const WKS=`
+self.onmessage=async({data:{id,action}})=>{
+  if(action==='read'){try{const fh=await(await navigator.storage.getDirectory()).getFileHandle(id);self.postMessage({id,type:'file',file:await fh.getFile()});}catch(e){self.postMessage({id,type:'error',msg:e.message})}}
+  if(action==='delete'){try{await(await navigator.storage.getDirectory()).removeEntry(id)}catch(_){}self.postMessage({id,type:'deleted'})}
+};`;
+let wk=null;const wkC={};
+function iWk(){if(!wk){wk=new Worker(URL.createObjectURL(new Blob([WKS],{type:'application/javascript'})));wk.onmessage=({data})=>{if(wkC[data.id]){wkC[data.id](data);delete wkC[data.id];}};}}
+function wop(id,action){iWk();return new Promise(r=>{wkC[id]=r;wk.postMessage({id,action});});}
+
+// State
+let meta=null,blobURL=null,cmts=[],CU=null,creator=null;
+const params=new URLSearchParams(location.search);
+const vid=params.get('id');
+const isEm=params.has('embed');
+
+async function init(){
+  if(!vid){document.getElementById('ls').innerHTML='<div style="color:var(--red);font-family:sans-serif;padding:20px">No video ID provided.</div>';return;}
+  if(isEm)document.body.classList.add('em');
+  await openDB();
+
+  // Load current user (for ownership checks)
+  const uid=localStorage.getItem('vv_uid');
+  if(uid)CU=await iGet('users',uid);
+
+  meta=await iGet('videos',vid);
+  if(!meta){document.getElementById('ls').innerHTML='<div style="color:var(--red);padding:20px;font-family:sans-serif;text-align:center">Short not found in this browser\'s storage.<br><small style="color:var(--mu)">Open on the same device you uploaded from.</small></div>';return;}
+
+  // Load creator
+  if(meta.userId)creator=await iGet('users',meta.userId);
+
+  // ── INSTANT PLAY: get blob URL from OPFS ──
+  const res=await wop(vid,'read');
+  if(res.type!=='file'){document.getElementById('ls').innerHTML='<div style="color:var(--red);padding:20px;font-family:sans-serif;text-align:center">Video file not found in storage.<br><small style="color:var(--mu)">Re-upload to restore.</small></div>';return;}
+  blobURL=URL.createObjectURL(res.file);
+
+  meta.views=(meta.views||0)+1;
+  iPut('videos',meta).catch(()=>{});
+
+  const sv=document.getElementById('sv');
+  sv.src=blobURL;
+  const ar=meta.aspectRatio||'1:1';
+  if(ar==='9:16')sv.style.cssText='height:100%;width:auto;max-width:100%';
+  else if(ar==='1:1')sv.style.cssText='height:100%;width:auto;max-width:100%;aspect-ratio:1/1';
+  else sv.style.cssText='width:100%;height:auto;max-height:100%';
+
+  // Meta UI
+  document.getElementById('vtit').textContent=meta.title;
+  document.getElementById('vdsc').textContent=meta.description||'';
+  document.getElementById('vmta').textContent=`👁 ${fmt(meta.views)} views · ${timeAgo(meta.createdAt)}`;
+  document.getElementById('lkCnt').textContent=fmt(meta.likes||0);
+  document.title=meta.title+' — VidVault Short';
+  document.getElementById('delNm').textContent='"'+meta.title+'"';
+
+  // Creator row
+  if(creator){
+    const ca=document.getElementById('crAv');
+    ca.style.background=creator.avatarColor||'#566882';
+    ca.textContent=(creator.displayName||'?')[0].toUpperCase();
+    document.getElementById('crNm').textContent=creator.displayName;
+  }else{document.getElementById('crRow').style.display='none';}
+
+  // Privacy badge
+  if(meta.isPrivate)document.getElementById('pvBadge').classList.add('show');
+
+  // Owner controls
+  const isOwn=CU&&meta.userId===CU.id;
+  if(isOwn){
+    document.getElementById('delBtn').style.display='';
+    const vb=document.getElementById('visBtn');
+    vb.style.display='';
+    vb.textContent=meta.isPrivate?'🌐 Make Public':'🔒 Make Private';
+  }
+
+  // Embed code
+  const eu=location.origin+location.pathname+'?id='+vid+'&embed=1';
+  const w=ar==='9:16'?400:480,h=ar==='9:16'?720:480;
+  document.getElementById('embta').value=`<iframe src="${eu}" width="${w}" height="${h}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+
+  // Load comments
+  cmts=await iAllIdx('comments','vId',vid);
+  cmts.sort((a,b)=>b.createdAt-a.createdAt);
+  rCmts();
+
+  sv.play().catch(()=>{sv.muted=true;sv.play().catch(()=>{});});
+  document.getElementById('ls').style.display='none';
+}
+
+function rCmts(){
+  const cnt=cmts.length;
+  document.getElementById('cmtCnt').textContent=cnt;
+  document.getElementById('cmtHdr').textContent=`${cnt} comment${cnt!==1?'s':''}`;
+  const cl=document.getElementById('cl');
+  if(!cnt){cl.innerHTML='<div class="nc"><div class="ico">💬</div><p>No comments yet.<br>Be the first!</p></div>';return;}
+  cl.innerHTML=cmts.map(c=>`
+    <div class="cmt">
+      <div class="cmt-h">
+        <div class="cav">${(c.author||'?')[0].toUpperCase()}</div>
+        <div class="cnm">${esc(c.author||'Anonymous')}</div>
+        <div class="ctm">${timeAgo(c.createdAt)}</div>
+      </div>
+      <div class="ctx">${esc(c.text)}</div>
+      <button class="clk ${c.liked?'liked':''}" onclick="togCLike('${c.id}',this)">❤ <span>${fmt(c.likes||0)}</span></button>
+    </div>`).join('');
+}
+
+async function postCmt(){
+  const name=document.getElementById('cnm').value.trim();
+  const text=document.getElementById('ctxt').value.trim();
+  if(!text){showToast('Write something first!','warn');return;}
+  const c={id:'c_'+Date.now()+'_'+Math.random().toString(36).slice(2,5),videoId:vid,author:name||'Anonymous',text,likes:0,createdAt:Date.now(),liked:false};
+  await iPut('comments',c);
+  cmts.unshift(c);document.getElementById('ctxt').value='';rCmts();
+  document.getElementById('cl').scrollTop=0;
+}
+
+async function togCLike(id,btn){
+  const c=cmts.find(x=>x.id===id);if(!c)return;
+  c.liked=!c.liked;c.likes=Math.max(0,(c.likes||0)+(c.liked?1:-1));
+  await iPut('comments',c);
+  btn.className='clk'+(c.liked?' liked':'');
+  btn.innerHTML=`❤ <span>${fmt(c.likes)}</span>`;
+}
+
+function togPlay(){
+  const sv=document.getElementById('sv'),pi=document.getElementById('ppi');
+  if(sv.paused){sv.play();pi.textContent='▶';}else{sv.pause();pi.textContent='⏸';}
+  pi.classList.add('pop');setTimeout(()=>pi.classList.remove('pop'),400);
+}
+
+async function likeShort(){
+  if(!meta)return;
+  // Toggle like using CU if available
+  if(CU){
+    const lId=CU.id+'_'+vid;
+    const ex=await iGet('videoLikes',lId);
+    if(ex){await iDel2('videoLikes',lId);meta.likes=Math.max(0,(meta.likes||1)-1);document.getElementById('lkAct').classList.remove('liked');}
+    else{await iPut('videoLikes',{id:lId,userId:CU.id,videoId:vid,createdAt:Date.now()});meta.likes=(meta.likes||0)+1;document.getElementById('lkAct').classList.add('liked');}
+  }else{
+    meta.likes=(meta.likes||0)+1;
+    document.getElementById('lkAct').classList.add('liked');
+  }
+  await iPut('videos',meta);
+  document.getElementById('lkCnt').textContent=fmt(meta.likes);
+}
+
+async function togVis(){
+  if(!meta||!CU||meta.userId!==CU.id)return;
+  meta.isPrivate=!meta.isPrivate;await iPut('videos',meta);
+  const isP=meta.isPrivate;
+  document.getElementById('pvBadge').classList.toggle('show',isP);
+  document.getElementById('visBtn').textContent=isP?'🌐 Make Public':'🔒 Make Private';
+  showToast(`Now ${isP?'🔒 Private':'🌐 Public'}`);
+}
+
+async function dlShort(){
+  if(!blobURL)return;
+  const ext=(meta.mimeType||'video/mp4').split('/')[1]||'mp4';
+  const a=document.createElement('a');a.href=blobURL;a.download=meta.title+'.'+ext;a.click();
+}
+
+function showEmb(){document.getElementById('emp').classList.add('open');}
+function cpEmb(){document.getElementById('embta').select();document.execCommand('copy');document.getElementById('emp').classList.remove('open');showToast('Embed code copied!');}
+
+function togCmt(){document.body.classList.toggle('sc');}
+function hideCmt(){document.body.classList.remove('sc');}
+
+function openCreator(){
+  // Pass creator UID back to main app if it's open
+  if(window.opener&&creator)try{window.opener.openProfile(creator.id)}catch(_){}
+}
+
+// Delete
+function cnfDel(){document.getElementById('dcm').classList.add('open');}
+function closeDel(){document.getElementById('dcm').classList.remove('open');}
+async function execDel(){
+  if(!meta)return;closeDel();
+  await iDel2('videos',vid);
+  wop(vid,'delete').catch(()=>{});
+  if(blobURL)URL.revokeObjectURL(blobURL);
+  location.href='index.html';
+}
+
+// Helpers
+function fmt(n){n=n||0;if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return String(n);}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function timeAgo(ts){const s=(Date.now()-ts)/1000;if(s<60)return'just now';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';if(s<604800)return Math.floor(s/86400)+'d ago';return new Date(ts).toLocaleDateString();}
+let tT;
+function showToast(msg,type='ok'){clearTimeout(tT);let t=document.getElementById('_t');if(!t){t=document.createElement('div');t.id='_t';t.style.cssText='position:fixed;bottom:18px;right:18px;z-index:9999;background:#0d1117;border:1px solid #1e2d42;border-left:4px solid #3cf0c5;color:#dde5f0;padding:10px 15px;border-radius:9px;font-size:.8rem;max-width:280px;transform:translateX(130%);transition:transform .3s;box-shadow:0 8px 28px rgba(0,0,0,.5);font-family:"DM Sans",sans-serif';document.body.appendChild(t);}t.style.borderLeftColor=type==='warn'?'#ff8c42':type==='err'?'#ff3c3c':'#3cf0c5';t.textContent=msg;t.style.transform='translateX(0)';tT=setTimeout(()=>t.style.transform='translateX(130%)',3500);}
+
+init().catch(e=>{document.getElementById('ls').innerHTML=`<div style="color:var(--red);padding:20px;font-family:sans-serif">${e.message}</div>`;});
+</script>
+</body>
+</html>
